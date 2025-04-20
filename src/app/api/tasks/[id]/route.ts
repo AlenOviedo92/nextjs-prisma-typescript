@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/app/libs/prisma";         //Traigo la DB para hacer consultas
+import { prisma } from "@/libs/prisma";         //Traigo la DB para hacer consultas
 
 interface Params {
     params: { id: string }

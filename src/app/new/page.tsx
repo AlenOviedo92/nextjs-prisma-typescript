@@ -1,16 +1,36 @@
 "use client"
 import { useForm } from "react-hook-form";
+import { useRouter, useParams } from "next/navigation";
+import { useEffect } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 
 function NewPage() {
-    const { handleSubmit, register } = useForm()
+    const params = useParams()
+    console.log(params)
+
+    useEffect(() => {
+        if(params.id) {
+            axios.get(`/api/tasks/${params.id}`)
+                .then(res => {                              //Agrego then para evitar poner el await, ya que useEffect no me permite async/await
+                    setValue('title', res.data.title)
+                    setValue('description', res.data.description)
+                })     
+        }
+    }, [])
+
+    const { handleSubmit, register, setValue } = useForm()  //setValue permite actualizar valores del formulario
     const router = useRouter()
 
     const onSubmit = handleSubmit(async data => {
-        const res = await axios.post('/api/tasks', data)
-        console.log(res)
+        if(params.id) {
+            console.log('Actualizando tarea')
+            await axios.put(`/api/tasks/${params.id}`, data)
+        } else {
+            const res = await axios.post('/api/tasks', data)
+            console.log(res)
+        }
         router.push('/')
+        router.refresh()
     })
 
     return(
@@ -46,7 +66,9 @@ function NewPage() {
                 <button
                     className="bg-sky-500 px-3 py-1 rounded-md text-white mt-2"
                 >
-                    CREAR
+                    {
+                        params.id ? "EDITAR" : "CREAR"
+                    }
                 </button>
             </form>
         </section>
