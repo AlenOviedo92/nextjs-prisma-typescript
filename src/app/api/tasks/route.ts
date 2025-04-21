@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/libs/prisma";         //Traigo la DB para hacer consultas
+import { prisma } from "@/libs/prisma";             //Traigo la DB para hacer consultas
 
 export async function GET() {
     const tasks = await prisma.task.findMany()      //Consulto a la DB, busca múltiples datos dentro de la tabla
